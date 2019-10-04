@@ -2,3 +2,6 @@
 __pycache__
 test.py
 graph_test.py
+puzzle.py
+puzzle_test.py
+
