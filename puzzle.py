@@ -1,7 +1,7 @@
-from graph import Graph
+from modules import graph
 
 
-class Puzzle(Graph):
+class Puzzle(graph.Graph):
     UP = (-1, 0)
     DOWN = (1, 0)
     LEFT = (0, -1)
@@ -94,8 +94,5 @@ class Puzzle(Graph):
         result = []
         for successor in moves:
             path = tuple((node, successor))
-            self.add_path(path, 1, True)
             result.append([successor, 1])
-        self.visited.add(node)
         return result
-

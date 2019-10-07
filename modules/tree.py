@@ -1,5 +1,5 @@
-from graph import Graph
-import heapq
+from modules.graph import Graph
+
 
 class TreeNode:
     def __init__(self, node, total_cost, depth, parent):
@@ -40,7 +40,6 @@ class TreeSearch:
         self.fringe = [self.root]
         self.next_node = self.root
         self.iteration = 0
-        self.visited = set()
 
     def expand(self, node):
         successor_function = self.graph.successor(node.node)
@@ -68,13 +67,9 @@ class TreeSearch:
                 if self.graph.is_solution(self.next_node.node):
                     return get_complete_path(self.next_node)
                 else:
-                    if self.next_node in self.visited:
-                        continue
-
                     new_nodes = self.expand(self.next_node)
                     for new_node in new_nodes:
                         self.fringe.append(new_node)
-                    self.visited.add(self.next_node)
             else:
                 return False
 
