@@ -1,5 +1,5 @@
 from modules.graph import Graph
-from abc import ABCMeta, abstractmethod
+from abc import abstractmethod
 
 
 class TreeNode:
@@ -15,6 +15,7 @@ class TreeNode:
 
 class TreeSearch:
     def __init__(self, graph: Graph):
+        self.closed = set()
         self.graph = graph
         self.root = TreeNode(
             node=graph.get_starting_node(),
@@ -26,6 +27,7 @@ class TreeSearch:
         self.iteration = 0
 
     def expand(self, node):
+        self.closed.add(node.node)
         successor_function = self.graph.successor(node.node)
         new_nodes_list = []
         for successor in successor_function:
@@ -38,16 +40,11 @@ class TreeSearch:
             new_nodes_list.append(new_node)
         return new_nodes_list
 
-    def iterative_search(self, log=False):
-        if  isinstance(self.__class__, TreeSearch):
+    def iterative_search(self):
+        if isinstance(self.__class__, TreeSearch):
             raise Exception("TreeSearch is abstract")
         while True:
             self.iteration += 1
-            if log:
-                print("Iteration: {}".format(self.iteration))
-                print("Depth: {}\t Fringe_len: {}".format(self.next_node.depth, len(self.fringe)))
-                print(": {}".format(str(self.fringe)))
-
             if len(self.fringe) != 0:
                 self.next_node = self.get()
                 if self.graph.is_solution(self.next_node.node):
@@ -55,9 +52,13 @@ class TreeSearch:
                 else:
                     new_nodes = self.expand(self.next_node)
                     for new_node in new_nodes:
-                        self.add(new_node)
+                        if new_node.node not in self.closed:
+                            self.add(new_node)
             else:
-                return False
+                return {
+                    "success": False,
+                    "depth": self.next_node.depth
+                }
 
     @staticmethod
     def get_complete_path(last_node: TreeNode):
@@ -72,12 +73,13 @@ class TreeSearch:
         result = {
             "path": complete_path,
             "cost": cost,
-            "depth": depth
+            "depth": depth,
+            "success": True
         }
         return result
 
     @abstractmethod
-    def search(self, log=False):
+    def search(self):
         raise Exception("TreeSearch is abstract")
 
     @abstractmethod

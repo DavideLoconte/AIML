@@ -90,9 +90,7 @@ class Puzzle(graph.Graph):
         ]
         while node in moves:
             moves.remove(node)
-
         result = []
         for successor in moves:
-            path = tuple((node, successor))
             result.append([successor, 1])
         return result
