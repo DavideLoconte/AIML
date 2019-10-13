@@ -1,11 +1,8 @@
 class Graph:
 
-    """Class modelling a graph
-    Nodes are a list of strings called nodes
-    Paths between nodes are a dictionary of k-v {(source_node, dest_node): cost}
-    Cost is a integer value
-    Solutions is a list of nodes
-    Starting is a string representing a node"""
+    """
+    Provides a common interface for modelling graphs
+    """
 
     def __init__(self):
         self.nodes = set()
@@ -14,45 +11,74 @@ class Graph:
         self.solutions: list = []
 
     def is_solution(self, node):
-        """Return true if given node is in solution"""
+        """
+        Check if input node is a solution or a final state
+        :param node: node to check
+        :return: True if node is a solution
+        """
         for solution in self.solutions:
             if node == solution:
                 return True
         return False
 
     def add_solution(self, node):
+        """
+        Add node to solutions
+        :param node: node to add as solution
+        """
         if self.node_exists(node):
             self.solutions.append(node)
         else:
             raise Exception("Invalid node {}".format(str(node)))
 
     def add_node(self, node):
+        """
+        Add node to node set
+        :param node: node to add
+        """
         self.nodes.add(node)
 
     def set_starting_node(self, node):
-        """Set a new starting node"""
+        """
+        Set existing node as starting node
+        :param node: node to set as starting
+        """
         if self.node_exists(node):
             self.starting_node = node
         else:
             raise Exception("Node {} does not exists".format(str(node)))
 
     def get_starting_node(self):
-        """Return starting node"""
+        """
+        :return: Retrieve the starting node
+        """
         return self.starting_node
 
     def remove_node(self, node):
-        """Remove existing node"""
+        """
+        Removes existing node
+        :param node: node to be removed
+        """
         if self.node_exists(node):
             self.nodes.remove(node)
         else:
             raise Exception("Node {} does not exists".format(str(node)))
 
     def node_exists(self, node):
-        """Return True if node exists"""
+        """
+        Checks if node exists
+        :param node: node to check
+        :return: True if node exists, otherwise false
+        """
         return node in self.nodes
 
     def add_path(self, path: tuple, cost: object = 1, gen_nodes: object = False):
-        """Add path between nodes. If gen_nodes is set True, non existing nodes will be generated"""
+        """
+        Add path in the path dictionary
+        :param path: (src_node,dest_node) -> tuple of two element
+        :param cost: cost of the path
+        :param gen_nodes: If True, non existing nodes will be generated. Default False
+        """
         if len(path) != 2:
             raise Exception("Illegal path format: {}".format(str(path)))
         if self.path_exists(path):
@@ -67,7 +93,11 @@ class Graph:
         self.paths[path] = cost
 
     def change_cost(self, path: tuple, new_cost: int = 1):
-        """Change cost of existing path"""
+        """
+        Changes the cost of existing path
+        :param path: the path to change
+        :param new_cost: new path cost
+        """
         if len(path) != 2:
             raise Exception("Illegal path format: {}".format(str(path)))
         if not self.path_exists(path):
@@ -75,7 +105,10 @@ class Graph:
         self.paths[path] = new_cost
 
     def remove_path(self, path: tuple):
-        """Remove existing path"""
+        """
+        Remove existing path
+        :param path: path to remove
+        """
         if len(path) != 2:
             raise Exception("Illegal path format: {}".format(str(path)))
         if not self.path_exists(path):
@@ -83,23 +116,36 @@ class Graph:
         self.paths.pop(path)
 
     def successor(self, node):
-        """Return successor function of give node. By default, return value is a list of successor nodes
-        if @return_cost is set True, return value is a list of (dest_node, cost)"""
+        """
+        Given a node, returns the next possible steps
+        this method should be overrided in specialized classes to model new problems
+        :param node: node to check
+        :return: [*(next_node, cost)], list of tuples containing next_node from starting and path cost
+        """
         successor = []
         if not self.node_exists(node):
             raise Exception("Node {} does not exists".format(str(node)))
         for path in self.paths.keys():
-            successor.append((path[1], self.paths.get(path)))
+            if path[0] == node:
+                successor.append((path[1], self.paths.get(path)))
         return successor
 
     def path_exists(self, path: tuple):
-        """Return True if path exists"""
+        """
+        Check if path exists
+        :param path: path to check
+        :return: True if path exists
+        """
         if len(path) != 2:
             raise Exception("Illegal path format: {}".format(str(path)))
         return path in self.paths.keys()
 
     def get_cost(self, path: tuple):
-        """Return cost of existing path"""
+        """
+        Return the cost of the path
+        :param path: path to retrieve the cost
+        :return: path cost
+        """
         if len(path) != 2:
             raise Exception("Illegal path format: {}".format(str(path)))
         if not self.path_exists(path):
