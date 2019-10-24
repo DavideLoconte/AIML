@@ -48,13 +48,13 @@ stopwatch = Stopwatch()
 
 stopwatch.tic()
 print("Searching A*")
-result = DepthFirst(puzzle).search()
+result = AStar(puzzle, h1).search()
 stopwatch.toc()
 
-# for path in result.path:
-#     print("\n" * 99)
-#     print_puzzle_table(path)
-#     sleep(0.5)
+for path in result.path:
+    print("\n" * 99)
+    print_puzzle_table(path)
+    sleep(0.5)
 
 
 print("Depth = " + str(result.depth))

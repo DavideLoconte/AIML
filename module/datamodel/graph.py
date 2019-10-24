@@ -5,7 +5,7 @@ class Graph:
     """
 
     def __init__(self):
-        self.nodes = set()
+        self.nodes = list()
         self.paths: dict = {}
         self.starting_node = None
         self.solutions: list = []
@@ -36,7 +36,7 @@ class Graph:
         Add node to node set
         :param node: node to add
         """
-        self.nodes.add(node)
+        self.nodes.append(node)
 
     def set_starting_node(self, node):
         """
@@ -72,12 +72,13 @@ class Graph:
         """
         return node in self.nodes
 
-    def add_path(self, path: tuple, cost: object = 1, gen_nodes: object = False):
+    def add_path(self, path: tuple, cost: object = 1, gen_nodes: object = False, add_reversed: bool = False):
         """
         Add path in the path dictionary
         :param path: (src_node,dest_node) -> tuple of two element
         :param cost: cost of the path
         :param gen_nodes: If True, non existing nodes will be generated. Default False
+        :param add_reversed: If True, add reversed path with same cost
         """
         if len(path) != 2:
             raise Exception("Illegal path format: {}".format(str(path)))
@@ -91,6 +92,8 @@ class Graph:
         elif not self.node_exists(path[0]) or not self.node_exists(path[1]):
             raise Exception("Node {} or {} does not exists".format(path[0], path[1]))
         self.paths[path] = cost
+        if add_reversed:
+            self.add_path(tuple(reversed(path)), cost, gen_nodes, False)
 
     def change_cost(self, path: tuple, new_cost: int = 1):
         """
@@ -151,3 +154,6 @@ class Graph:
         if not self.path_exists(path):
             raise Exception("Path {} do not exists".format(str(path)))
         return self.paths.get(path)
+
+    def get_nodes(self):
+        return self.nodes

@@ -6,6 +6,12 @@ class Result:
         self.success = True
 
 
+class RegressionHypothesis(Result):
+    def __init__(self):
+        super().__init__()
+        self.hypothesis = []
+
+
 class SearchResult(Result):
     """
     Represents the result of a Tree search algorithm,
@@ -31,3 +37,13 @@ class SearchResult(Result):
                 last_node = last_node.parent
             self.path.append(last_node)
             self.path.reverse()
+
+
+class CSPResult(Result):
+    def __init__(self, assignment):
+        super().__init__()
+        self.success = True
+        if assignment is None:
+            self.success = False
+            self.assignment = None
+        self.assignment = assignment
